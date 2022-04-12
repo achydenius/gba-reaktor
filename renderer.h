@@ -1,4 +1,4 @@
-#include <gba_base.h>
+#include "types.h"
 
 u16* g_buffer = (u16*)MODE5_BB;
 
@@ -6,10 +6,6 @@ static u8 left_edges[SCREEN_HEIGHT];
 static u8 right_edges[SCREEN_HEIGHT];
 static u8 top_edge;
 static u8 bottom_edge;
-
-typedef struct Point {
-  s32 x, y;
-} Point;
 
 static void swap(u16* a, u16* b) {
   u16 tmp = *a;

@@ -1,5 +1,6 @@
 #include <gba_video.h>
 
+#include "math.h"
 #include "renderer.h"
 
 void wait_vblank() {
@@ -21,17 +22,25 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
+  u32 point_count = 4;
+  Point points[] = {{0 << 8, 40 << 8}, {-40 << 8, 0 << 8}, {0 << 8, -40 << 8}, {40 << 8, 0 << 8}};
+  Point rotated[point_count];
+  Point projected[point_count];
+
+  u32 angle = 0;
   while (1) {
     wait_vblank();
 
     clear_screen(4);
 
-    Point points[] = {{70 << 8, 40 << 8},
-                      {55 << 8, 90 << 8},
-                      {90 << 8, 120 << 8},
-                      {150 << 8, 100 << 8},
-                      {135 << 8, 45 << 8}};
-    draw_polygon(points, 5, 1);
+    for (u32 i = 0; i < point_count; i++) {
+      rotate(&points[i], &rotated[i], angle);
+      project(&rotated[i], &projected[i]);
+    }
+
+    draw_polygon(projected, point_count, 1);
+
+    angle++;
 
     swap_buffers();
   }

@@ -11,7 +11,8 @@ CFLAGS		:=	-g -Wall -pedantic -O3\
 				-ffast-math\
 				$(ARCH)
 LDFLAGS		:=	$(ARCH) $(SPECS)
-INCLUDES	:=	$(DEVKITPRO)/libgba/include
+INCLUDES	:=	-I$(DEVKITPRO)/libgba/include
+LIBS		:=	-lm
 
 all: main.gba
 
@@ -20,10 +21,10 @@ main.gba: main.elf
 	$(GBAFIX) main.gba
 
 main.elf: main.o
-	$(CC) main.o $(LDFLAGS) -o main.elf
+	$(CC) main.o $(LDFLAGS) -o main.elf $(LIBS)
 
 main.o: main.c *.h
-	$(CC) -c main.c $(CFLAGS) -o main.o -I$(INCLUDES)
+	$(CC) -c main.c $(CFLAGS) -o main.o $(INCLUDES)
 
 clean:
 	rm main.gba main.elf main.o
