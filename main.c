@@ -26,8 +26,12 @@ int main() {
 
     clear_screen(4);
 
-    Point points[] = {{70 << 8, 40 << 8}, {90 << 8, 120 << 8}, {170 << 8, 65 << 8}};
-    draw_polygon(points, 3, 1);
+    Point points[] = {{70 << 8, 40 << 8},
+                      {55 << 8, 90 << 8},
+                      {90 << 8, 120 << 8},
+                      {150 << 8, 100 << 8},
+                      {135 << 8, 45 << 8}};
+    draw_polygon(points, 5, 1);
 
     swap_buffers();
   }

@@ -2,6 +2,11 @@
 
 u16* g_buffer = (u16*)MODE5_BB;
 
+static u8 left_edges[SCREEN_HEIGHT];
+static u8 right_edges[SCREEN_HEIGHT];
+static u8 top_edge;
+static u8 bottom_edge;
+
 typedef struct Point {
   s32 x, y;
 } Point;
@@ -31,27 +36,50 @@ void put_pixel(u8 x, u8 y, u8 color) {
   }
 }
 
-void trace_edge(u16 x0, u16 y0, u16 x1, u16 y1, u8 color) {
+void trace_edge(u16 x0, u16 y0, u16 x1, u16 y1, u8* buffer) {
   if (y0 > y1) {
     swap(&x0, &x1);
     swap(&y0, &y1);
   }
 
+  u8 start_y = y0 >> 8;
+  u8 end_y = y1 >> 8;
+
+  if (start_y < top_edge) {
+    top_edge = start_y;
+  }
+  if (end_y > bottom_edge) {
+    bottom_edge = end_y;
+  }
+
   s32 dx = ((x1 - x0) << 8) / (y1 - y0);
-  s32 ex = (1 << 8) - (y0 & 0xff);
+  s32 ex = (1 << 8) - (y0 & 0xFF);
   s32 x = x0 + ((dx * ex) >> 8);
 
-  for (u32 y = y0 >> 8; y < y1 >> 8; y++) {
-    put_pixel(x >> 8, y, color);
+  for (u32 y = start_y; y < end_y; y++) {
+    buffer[y] = x >> 8;
     x += dx;
   }
 }
 
 void draw_polygon(Point* points, u32 point_count, u8 color) {
+  top_edge = 255;
+  bottom_edge = 0;
+
   for (u32 i = 0; i < point_count; i++) {
     Point* a = &points[i];
     Point* b = &points[(i + 1) % point_count];
 
-    trace_edge(a->x, a->y, b->x, b->y, color);
+    if (a->y < b->y) {
+      trace_edge(a->x, a->y, b->x, b->y, left_edges);
+    } else {
+      trace_edge(a->x, a->y, b->x, b->y, right_edges);
+    }
+  }
+
+  for (u32 y = top_edge; y < bottom_edge; y++) {
+    for (u8 x = left_edges[y]; x < right_edges[y]; x++) {
+      put_pixel(x, y, 1);
+    }
   }
 }
