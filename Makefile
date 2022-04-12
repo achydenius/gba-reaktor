@@ -22,7 +22,7 @@ main.gba: main.elf
 main.elf: main.o
 	$(CC) main.o $(LDFLAGS) -o main.elf
 
-main.o: main.c
+main.o: main.c *.h
 	$(CC) -c main.c $(CFLAGS) -o main.o -I$(INCLUDES)
 
 clean:

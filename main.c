@@ -1,30 +1,15 @@
 #include <gba_video.h>
 
-u16* buffer = (u16*)MODE5_BB;
+#include "renderer.h"
 
 void wait_vblank() {
   while (REG_VCOUNT < SCREEN_HEIGHT) {
   }
 }
 
-void clear_screen(u8 color) {
-  u32 value = (color << 24) | (color << 16) | (color << 8) | color;
-  u32* buf = (u32*)buffer;
-  u32 i = SCREEN_WIDTH * SCREEN_HEIGHT / 4;
-  while (i > 0) {
-    *(buf++) = value;
-    i--;
-  }
-}
-
 void swap_buffers() {
   REG_DISPCNT ^= BACKBUFFER;
-  buffer = REG_DISPCNT & BACKBUFFER ? (u16*)MODE5_FB : (u16*)MODE5_BB;
-}
-
-void put_pixel(u8 x, u8 y, u8 color) {
-  u16* buf = &buffer[(y * SCREEN_WIDTH / 2) + (x / 2)];
-  *buf = x & 1 ? ((*buf & 0xFF) | (color << 8)) : ((*buf & 0xFF00) | color);
+  g_buffer = REG_DISPCNT & BACKBUFFER ? (u16*)MODE5_FB : (u16*)MODE5_BB;
 }
 
 int main() {
@@ -36,19 +21,13 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  u32 x = 0;
-  s32 dir = 1;
-
   while (1) {
     wait_vblank();
 
     clear_screen(4);
 
-    put_pixel(x, SCREEN_HEIGHT / 2, 1);
-    x += dir;
-    if (x == 0 || x == SCREEN_WIDTH - 1) {
-      dir = -dir;
-    }
+    Point points[] = {{70 << 8, 40 << 8}, {90 << 8, 120 << 8}, {170 << 8, 65 << 8}};
+    draw_polygon(points, 3, 1);
 
     swap_buffers();
   }
