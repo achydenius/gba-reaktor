@@ -40,7 +40,7 @@ int main() {
 
     draw_polygon(projected, point_count, 1);
 
-    angle++;
+    angle = (angle + 1) & (TRIG_TABLE_SIZE - 1);
 
     swap_buffers();
   }

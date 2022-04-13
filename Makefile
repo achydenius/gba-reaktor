@@ -12,7 +12,6 @@ CFLAGS		:=	-g -Wall -pedantic -O3\
 				$(ARCH)
 LDFLAGS		:=	$(ARCH) $(SPECS)
 INCLUDES	:=	-I$(DEVKITPRO)/libgba/include
-LIBS		:=	-lm
 
 all: main.gba
 
@@ -21,10 +20,13 @@ main.gba: main.elf
 	$(GBAFIX) main.gba
 
 main.elf: main.o
-	$(CC) main.o $(LDFLAGS) -o main.elf $(LIBS)
+	$(CC) main.o $(LDFLAGS) -o main.elf
 
-main.o: main.c *.h
+main.o: main.c tables.h *.h
 	$(CC) -c main.c $(CFLAGS) -o main.o $(INCLUDES)
 
+tables.h: generate-tables.py
+	./generate-tables.py > tables.h
+
 clean:
-	rm main.gba main.elf main.o
+	rm main.gba main.elf main.o tables.h
