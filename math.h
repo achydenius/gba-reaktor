@@ -64,6 +64,12 @@ void matrix_multiply(Matrix *a, Matrix *b, Matrix *result) {
   result->m23 = ((a->m20 * b->m03 + a->m21 * b->m13 + a->m22 * b->m23) >> 8) + a->m23;
 }
 
+void vector_set(Vector3D *vector, s32 x, s32 y, s32 z) {
+  vector->x = x;
+  vector->y = y;
+  vector->z = z;
+}
+
 void vector_multiply(Vector3D *source, Matrix *matrix, Vector3D *target) {
   target->x = ((source->x * matrix->m00 + source->y * matrix->m01 + source->z * matrix->m02) >> 8) +
               matrix->m03;

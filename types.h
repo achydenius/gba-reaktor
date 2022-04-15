@@ -28,4 +28,12 @@ typedef struct Polygon {
   u32 color;
 } Polygon;
 
+typedef struct Object {
+  Vertex *vertices;
+  Polygon *polygons;
+  u32 vertex_count;
+  u32 polygon_count;
+  Vector3D rotation, translation;
+} Object;
+
 #endif

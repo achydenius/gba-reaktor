@@ -22,34 +22,25 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  Vertex vertices[] = {
-      {{0, 40 << 8, 0}}, {{-40 << 8, 0, 0}}, {{0, -40 << 8, 0}}, {{40 << 8, 0, 0}}};
-
-  Polygon square = {(Vertex*[]){
-                        &vertices[0],
-                        &vertices[1],
-                        &vertices[2],
-                        &vertices[3],
-                    },
-                    4, 1};
+  Vertex vertices[] = {{{-40 << 8, 40 << 8, 0}},  {{-40 << 8, 20 << 8, 0}},
+                       {{40 << 8, 20 << 8, 0}},   {{40 << 8, 40 << 8, 0}},
+                       {{-40 << 8, -20 << 8, 0}}, {{-40 << 8, -40 << 8, 0}},
+                       {{40 << 8, -40 << 8, 0}},  {{40 << 8, -20 << 8, 0}}};
+  Polygon polygons[] = {
+      {(Vertex*[]){&vertices[0], &vertices[1], &vertices[2], &vertices[3]}, 4, 1},
+      {(Vertex*[]){&vertices[4], &vertices[5], &vertices[6], &vertices[7]}, 4, 1},
+  };
+  Object object = {vertices, polygons, 8, 2};
 
   u32 angle = 0;
-  Matrix rotation, translation, matrix;
   while (1) {
     wait_vblank();
 
     clear_screen(4);
 
-    matrix_rotation(&rotation, 0, angle >> 1, angle);
-    matrix_translation(&translation, sin_table[angle] << 6, 0, 80 << 8);
-    matrix_multiply(&translation, &rotation, &matrix);
-
-    for (u32 i = 0; i < square.vertex_count; i++) {
-      vector_multiply(&square.vertices[i]->original, &matrix, &square.vertices[i]->transformed);
-      vector_project(&square.vertices[i]->transformed, 60 << 8, &square.vertices[i]->projected);
-    }
-
-    draw_polygon(&square);
+    vector_set(&object.rotation, 0, angle >> 1, angle);
+    vector_set(&object.translation, sin_table[angle] << 6, 0, 80 << 8);
+    object_render(&object);
 
     angle = (angle + 1) & (TRIG_TABLE_SIZE - 1);
 
