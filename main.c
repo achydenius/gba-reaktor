@@ -22,11 +22,16 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  u32 vertex_count = 4;
-  Vector3D vertices[] = {
-      {0 << 8, 40 << 8}, {-40 << 8, 0 << 8}, {0 << 8, -40 << 8}, {40 << 8, 0 << 8}};
-  Vector3D rotated[vertex_count];
-  Vector2D projected[vertex_count];
+  Vertex vertices[] = {
+      {{0, 40 << 8, 0}}, {{-40 << 8, 0, 0}}, {{0, -40 << 8, 0}}, {{40 << 8, 0, 0}}};
+
+  Polygon square = {(Vertex*[]){
+                        &vertices[0],
+                        &vertices[1],
+                        &vertices[2],
+                        &vertices[3],
+                    },
+                    4, 1};
 
   u32 angle = 0;
   Matrix rotation, translation, matrix;
@@ -39,12 +44,12 @@ int main() {
     matrix_translation(&translation, sin_table[angle] << 6, 0, 80 << 8);
     matrix_multiply(&translation, &rotation, &matrix);
 
-    for (u32 i = 0; i < vertex_count; i++) {
-      vector_multiply(&vertices[i], &matrix, &rotated[i]);
-      vector_project(&rotated[i], 60 << 8, &projected[i]);
+    for (u32 i = 0; i < square.vertex_count; i++) {
+      vector_multiply(&square.vertices[i]->original, &matrix, &square.vertices[i]->transformed);
+      vector_project(&square.vertices[i]->transformed, 60 << 8, &square.vertices[i]->projected);
     }
 
-    draw_polygon(projected, vertex_count, 1);
+    draw_polygon(&square);
 
     angle = (angle + 1) & (TRIG_TABLE_SIZE - 1);
 

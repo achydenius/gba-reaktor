@@ -58,13 +58,13 @@ void trace_edge(s32 x0, s32 y0, s32 x1, s32 y1, u32* buffer) {
   }
 }
 
-void draw_polygon(Vector2D* points, u32 point_count, u32 color) {
+void draw_polygon(Polygon* polygon) {
   top_edge = 255;
   bottom_edge = 0;
 
-  for (u32 i = 0; i < point_count; i++) {
-    Vector2D* a = &points[i];
-    Vector2D* b = &points[(i + 1) % point_count];
+  for (u32 i = 0; i < polygon->vertex_count; i++) {
+    Vector2D* a = &polygon->vertices[i]->projected;
+    Vector2D* b = &polygon->vertices[(i + 1) % polygon->vertex_count]->projected;
 
     if (a->y < b->y) {
       trace_edge(a->x, a->y, b->x, b->y, left_edges);
@@ -75,7 +75,7 @@ void draw_polygon(Vector2D* points, u32 point_count, u32 color) {
 
   for (u32 y = top_edge; y < bottom_edge; y++) {
     for (u32 x = left_edges[y]; x < right_edges[y]; x++) {
-      put_pixel(x, y, 1);
+      put_pixel(x, y, polygon->color);
     }
   }
 }

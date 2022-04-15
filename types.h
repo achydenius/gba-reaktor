@@ -17,4 +17,15 @@ typedef struct Matrix {
   s32 m20, m21, m22, m23;
 } Matrix;
 
+typedef struct Vertex {
+  Vector3D original, transformed;
+  Vector2D projected;
+} Vertex;
+
+typedef struct Polygon {
+  Vertex **vertices;
+  u32 vertex_count;
+  u32 color;
+} Polygon;
+
 #endif
