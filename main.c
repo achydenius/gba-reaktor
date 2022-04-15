@@ -22,23 +22,27 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  u32 point_count = 4;
-  Point points[] = {{0 << 8, 40 << 8}, {-40 << 8, 0 << 8}, {0 << 8, -40 << 8}, {40 << 8, 0 << 8}};
-  Point rotated[point_count];
-  Point projected[point_count];
+  u32 vertex_count = 4;
+  Vector3D vertices[] = {
+      {0 << 8, 40 << 8}, {-40 << 8, 0 << 8}, {0 << 8, -40 << 8}, {40 << 8, 0 << 8}};
+  Vector3D rotated[vertex_count];
+  Vector2D projected[vertex_count];
 
   u32 angle = 0;
+  Matrix matrix;
   while (1) {
     wait_vblank();
 
     clear_screen(4);
 
-    for (u32 i = 0; i < point_count; i++) {
-      rotate(&points[i], &rotated[i], angle);
-      project(&rotated[i], &projected[i]);
+    create_rotation_matrix(&matrix, 0, angle >> 1, angle);
+
+    for (u32 i = 0; i < vertex_count; i++) {
+      transform_vector(&vertices[i], &matrix, &rotated[i]);
+      project_vector(&rotated[i], 80 << 8, 60 << 8, &projected[i]);
     }
 
-    draw_polygon(projected, point_count, 1);
+    draw_polygon(projected, vertex_count, 1);
 
     angle = (angle + 1) & (TRIG_TABLE_SIZE - 1);
 

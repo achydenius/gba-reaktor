@@ -58,13 +58,13 @@ void trace_edge(s32 x0, s32 y0, s32 x1, s32 y1, u32* buffer) {
   }
 }
 
-void draw_polygon(Point* points, u32 point_count, u32 color) {
+void draw_polygon(Vector2D* points, u32 point_count, u32 color) {
   top_edge = 255;
   bottom_edge = 0;
 
   for (u32 i = 0; i < point_count; i++) {
-    Point* a = &points[i];
-    Point* b = &points[(i + 1) % point_count];
+    Vector2D* a = &points[i];
+    Vector2D* b = &points[(i + 1) % point_count];
 
     if (a->y < b->y) {
       trace_edge(a->x, a->y, b->x, b->y, left_edges);
