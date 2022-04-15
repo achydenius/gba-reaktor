@@ -22,11 +22,14 @@ main.gba: main.elf
 main.elf: main.o
 	$(CC) main.o $(LDFLAGS) -o main.elf
 
-main.o: main.c tables.h *.h
+main.o: main.c tables.h objects.h *.h
 	$(CC) -c main.c $(CFLAGS) -o main.o $(INCLUDES)
 
 tables.h: generate-tables.py
 	./generate-tables.py > tables.h
 
+objects.h: parse-obj.py
+	./parse-obj.py > objects.h
+
 clean:
-	rm main.gba main.elf main.o tables.h
+	rm main.gba main.elf main.o tables.h objects.h

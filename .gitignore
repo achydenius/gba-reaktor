@@ -3,3 +3,4 @@
 *.gba
 *.sav
 tables.h
+objects.h

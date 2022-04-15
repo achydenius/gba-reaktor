@@ -11,7 +11,7 @@ void object_render(Object *object) {
   for (u32 i = 0; i < object->vertex_count; i++) {
     Vertex *vertex = &object->vertices[i];
     vector_multiply(&vertex->original, &matrix, &vertex->transformed);
-    vector_project(&vertex->transformed, 60 << 8, &vertex->projected);
+    vector_project(&vertex->transformed, 100 << 8, &vertex->projected);
   }
 
   for (u32 i = 0; i < object->polygon_count; i++) {

@@ -15,10 +15,10 @@ output = f'''
 
 #define TRIG_TABLE_SIZE {table_size}
 
-static s16 table_data[] = {{ {", ".join([str(value) for value in values])} }};
+s16 _table_data[] = {{ {", ".join([str(value) for value in values])} }};
 
-s16* sin_table = table_data;
-s16* cos_table = &table_data[{cos_offset}];
+s16* sin_table = _table_data;
+s16* cos_table = &_table_data[{cos_offset}];
 
 #endif
 '''

@@ -2,12 +2,12 @@
 
 u16* g_buffer = (u16*)MODE5_BB;
 
-static u32 left_edges[SCREEN_HEIGHT];
-static u32 right_edges[SCREEN_HEIGHT];
-static u32 top_edge;
-static u32 bottom_edge;
+u32 left_edges[SCREEN_HEIGHT];
+u32 right_edges[SCREEN_HEIGHT];
+u32 top_edge;
+u32 bottom_edge;
 
-static void swap(s32* a, s32* b) {
+void swap(s32* a, s32* b) {
   s32 tmp = *a;
   *a = *b;
   *b = tmp;

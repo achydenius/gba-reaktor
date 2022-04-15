@@ -1,6 +1,7 @@
 #include <gba_video.h>
 
 #include "math.h"
+#include "objects.h"
 #include "renderer.h"
 
 void wait_vblank() {
@@ -22,15 +23,12 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  Vertex vertices[] = {{{-40 << 8, 40 << 8, 0}},  {{-40 << 8, 20 << 8, 0}},
-                       {{40 << 8, 20 << 8, 0}},   {{40 << 8, 40 << 8, 0}},
-                       {{-40 << 8, -20 << 8, 0}}, {{-40 << 8, -40 << 8, 0}},
-                       {{40 << 8, -40 << 8, 0}},  {{40 << 8, -20 << 8, 0}}};
-  Polygon polygons[] = {
-      {(Vertex*[]){&vertices[0], &vertices[1], &vertices[2], &vertices[3]}, 4, 1},
-      {(Vertex*[]){&vertices[4], &vertices[5], &vertices[6], &vertices[7]}, 4, 1},
-  };
-  Object object = {vertices, polygons, 8, 2};
+  object.polygons[0].color = 1;
+  object.polygons[1].color = 2;
+  object.polygons[2].color = 1;
+  object.polygons[3].color = 2;
+  object.polygons[4].color = 3;
+  object.polygons[5].color = 3;
 
   u32 angle = 0;
   while (1) {
@@ -38,11 +36,13 @@ int main() {
 
     clear_screen(4);
 
-    vector_set(&object.rotation, 0, angle >> 1, angle);
-    vector_set(&object.translation, sin_table[angle] << 6, 0, 80 << 8);
+    u32 trig_table_wrap = TRIG_TABLE_SIZE - 1;
+
+    vector_set(&object.rotation, 0, (angle >> 1) & trig_table_wrap, angle & trig_table_wrap);
+    vector_set(&object.translation, sin_table[angle & trig_table_wrap] << 5, 0, 80 << 8);
     object_render(&object);
 
-    angle = (angle + 1) & (TRIG_TABLE_SIZE - 1);
+    angle++;
 
     swap_buffers();
   }
