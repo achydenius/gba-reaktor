@@ -29,17 +29,19 @@ int main() {
   Vector2D projected[vertex_count];
 
   u32 angle = 0;
-  Matrix matrix;
+  Matrix rotation, translation, matrix;
   while (1) {
     wait_vblank();
 
     clear_screen(4);
 
-    create_rotation_matrix(&matrix, 0, angle >> 1, angle);
+    matrix_rotation(&rotation, 0, angle >> 1, angle);
+    matrix_translation(&translation, sin_table[angle] << 6, 0, 80 << 8);
+    matrix_multiply(&translation, &rotation, &matrix);
 
     for (u32 i = 0; i < vertex_count; i++) {
-      transform_vector(&vertices[i], &matrix, &rotated[i]);
-      project_vector(&rotated[i], 80 << 8, 60 << 8, &projected[i]);
+      vector_multiply(&vertices[i], &matrix, &rotated[i]);
+      vector_project(&rotated[i], 60 << 8, &projected[i]);
     }
 
     draw_polygon(projected, vertex_count, 1);
