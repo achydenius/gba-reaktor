@@ -20,6 +20,7 @@ typedef struct Matrix {
 typedef struct Vertex {
   Vector3D original, transformed;
   Vector2D projected;
+  Vector3D normal;
   u32 color;
 } Vertex;
 

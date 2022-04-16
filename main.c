@@ -25,6 +25,10 @@ int main() {
   object.vertices[1].color = 31 << 8;
   object.vertices[2].color = 255 << 8;
   object.vertices[3].color = 255 << 8;
+  object.vertices[4].color = 31 << 8;
+  object.vertices[5].color = 31 << 8;
+  object.vertices[6].color = 255 << 8;
+  object.vertices[7].color = 255 << 8;
 
   u32 angle = 0;
   while (1) {
@@ -34,7 +38,7 @@ int main() {
 
     u32 trig_table_wrap = TRIG_TABLE_SIZE - 1;
 
-    vector_set(&object.rotation, 0, 0, angle & trig_table_wrap);
+    vector_set(&object.rotation, 0, angle & trig_table_wrap, angle & trig_table_wrap);
     vector_set(&object.translation, sin_table[angle & trig_table_wrap] << 5, 0, -80 << 8);
     object_render(&object);
 
