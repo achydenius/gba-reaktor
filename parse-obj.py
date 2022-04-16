@@ -9,7 +9,7 @@ def vertex_to_str(vertex):
 def face_to_str(face):
     return f'''{{(Vertex*[]) {{{", ".join([f'&_vertex_data[{index}]' for index in face])}}}, {len(face)}}}'''
 
-filename = 'cube.obj'
+filename = 'plane.obj'
 vertices = []
 faces = []
 for line in open(filename, 'r'):

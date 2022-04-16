@@ -20,12 +20,12 @@ typedef struct Matrix {
 typedef struct Vertex {
   Vector3D original, transformed;
   Vector2D projected;
+  u32 color;
 } Vertex;
 
 typedef struct Polygon {
   Vertex **vertices;
   u32 vertex_count;
-  u32 color;
 } Polygon;
 
 typedef struct Object {
