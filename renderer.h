@@ -1,5 +1,13 @@
 #include "rasterizer.h"
 
+bool polygon_is_visible(Polygon *polygon) {
+  Vector2D a, b;
+  vector_subtract(&polygon->vertices[2]->projected, &polygon->vertices[0]->projected, &a);
+  vector_subtract(&polygon->vertices[1]->projected, &polygon->vertices[0]->projected, &b);
+
+  return (a.x * b.y) - (a.y * b.x) > 0;
+}
+
 void object_render(Object *object) {
   Matrix rotation, translation, model_to_world, inverse_rotation;
 
@@ -24,9 +32,11 @@ void object_render(Object *object) {
 
   for (u32 i = 0; i < object->polygon_count; i++) {
     Polygon *polygon = &object->polygons[i];
-    s32 color = vector_dot(&polygon->normal, &light_transformed);
-    polygon->color = color > 0 ? color : 0;
+    if (polygon_is_visible(polygon)) {
+      s32 color = vector_dot(&polygon->normal, &light_transformed);
+      polygon->color = color > 0 ? color >> 8 : 0;
 
-    draw_polygon(polygon);
+      draw_polygon(polygon);
+    }
   }
 }

@@ -105,3 +105,8 @@ void vector_project(Vector3D *source, s32 projection_distance, Vector2D *target)
 s32 vector_dot(Vector3D *a, Vector3D *b) {
   return ((a->x * b->x) + (a->y * b->y) + (a->z * b->z)) >> 8;
 }
+
+void vector_subtract(Vector2D *a, Vector2D *b, Vector2D *result) {
+  result->x = a->x - b->x;
+  result->y = a->y - b->y;
+}
