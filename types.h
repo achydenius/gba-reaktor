@@ -25,6 +25,7 @@ typedef struct Vertex {
 typedef struct Polygon {
   Vertex **vertices;
   u32 vertex_count;
+  Vector3D normal;
   u32 color;
 } Polygon;
 
