@@ -21,13 +21,6 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  object.polygons[0].color = 31;
-  object.polygons[1].color = 127;
-  object.polygons[2].color = 31;
-  object.polygons[3].color = 127;
-  object.polygons[4].color = 255;
-  object.polygons[5].color = 255;
-
   u32 angle = 0;
   while (1) {
     wait_vblank();

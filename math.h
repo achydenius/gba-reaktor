@@ -64,6 +64,23 @@ void matrix_multiply(Matrix *a, Matrix *b, Matrix *result) {
   result->m23 = ((a->m20 * b->m03 + a->m21 * b->m13 + a->m22 * b->m23) >> 8) + a->m23;
 }
 
+void matrix_transpose_rotation(Matrix *source, Matrix *target) {
+  target->m00 = source->m00;
+  target->m01 = source->m10;
+  target->m02 = source->m20;
+  target->m03 = 0;
+
+  target->m10 = source->m01;
+  target->m11 = source->m11;
+  target->m12 = source->m21;
+  target->m13 = 0;
+
+  target->m20 = source->m02;
+  target->m21 = source->m12;
+  target->m22 = source->m22;
+  target->m23 = 0;
+}
+
 void vector_set(Vector3D *vector, s32 x, s32 y, s32 z) {
   vector->x = x;
   vector->y = y;
@@ -83,4 +100,8 @@ void vector_project(Vector3D *source, s32 projection_distance, Vector2D *target)
   s32 div = (projection_distance << 16) / source->z;
   target->x = ((source->x * div) >> 16) + (SCREEN_WIDTH << 7);
   target->y = ((-source->y * div) >> 16) + (SCREEN_HEIGHT << 7);
+}
+
+s32 vector_dot(Vector3D *a, Vector3D *b) {
+  return ((a->x * b->x) + (a->y * b->y) + (a->z * b->z)) >> 8;
 }
