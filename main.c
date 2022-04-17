@@ -21,15 +21,6 @@ int main() {
 
   REG_DISPCNT = MODE_4 | BG2_ON;
 
-  object.vertices[0].color = 31 << 8;
-  object.vertices[1].color = 31 << 8;
-  object.vertices[2].color = 255 << 8;
-  object.vertices[3].color = 255 << 8;
-  object.vertices[4].color = 31 << 8;
-  object.vertices[5].color = 31 << 8;
-  object.vertices[6].color = 255 << 8;
-  object.vertices[7].color = 255 << 8;
-
   u32 angle = 0;
   while (1) {
     wait_vblank();
