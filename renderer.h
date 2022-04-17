@@ -1,5 +1,18 @@
 #include "rasterizer.h"
 
+#define MAX_POLYGONS 6
+
+Polygon *visible_polygons[MAX_POLYGONS];
+u32 visible_polygon_count;
+
+bool is_back_face(Polygon *polygon) {
+  Vector2D a, b;
+  vector_subtract(&polygon->vertices[2]->projected, &polygon->vertices[0]->projected, &a);
+  vector_subtract(&polygon->vertices[1]->projected, &polygon->vertices[0]->projected, &b);
+
+  return (a.x * b.y) - (a.y * b.x) > 0;
+}
+
 void object_render(Object *object) {
   Matrix rotation, translation, model_to_world, inverse_rotation;
 
@@ -25,7 +38,16 @@ void object_render(Object *object) {
     vertex->color = color > 0 ? color : 0;
   }
 
+  visible_polygon_count = 0;
   for (u32 i = 0; i < object->polygon_count; i++) {
-    draw_polygon(&object->polygons[i]);
+    Polygon *polygon = &object->polygons[i];
+
+    if (is_back_face(polygon)) {
+      visible_polygons[visible_polygon_count++] = polygon;
+    }
+  }
+
+  for (u32 i = 0; i < visible_polygon_count; i++) {
+    draw_polygon(visible_polygons[i]);
   }
 }
