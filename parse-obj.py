@@ -33,7 +33,7 @@ def vector_to_str(vector):
 def face_to_str(face, normal):
     return f'''{{(Vertex*[]){{{', '.join([f'&_vertex_data[{index}]' for index in face])}}}, {len(face)}, {vector_to_str(normal)}, 0}}'''
 
-filename = 'cube.obj'
+filename = 'monogram.obj'
 vertices = []
 faces = []
 normals = []

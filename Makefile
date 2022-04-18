@@ -28,7 +28,7 @@ main.o: main.c tables.h objects.h *.h
 tables.h: generate-tables.py
 	./generate-tables.py > tables.h
 
-objects.h: parse-obj.py
+objects.h: parse-obj.py monogram.obj
 	./parse-obj.py > objects.h
 
 clean:
