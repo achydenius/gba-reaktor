@@ -27,6 +27,7 @@ typedef struct Polygon {
   u32 vertex_count;
   Vector3D normal;
   u32 color;
+  s32 z;
 } Polygon;
 
 typedef struct Object {
