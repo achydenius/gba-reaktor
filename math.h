@@ -98,8 +98,8 @@ void vector_multiply(Vector3D *source, Matrix *matrix, Vector3D *target) {
 
 void vector_project(Vector3D *source, s32 projection_distance, Vector2D *target) {
   s32 div = (projection_distance << 16) / source->z;
-  target->x = ((source->x * div) >> 16) + (SCREEN_WIDTH << 7);
-  target->y = ((-source->y * div) >> 16) + (SCREEN_HEIGHT << 7);
+  target->x = ((-source->x * div) >> 16) + (SCREEN_WIDTH << 7);
+  target->y = ((source->y * div) >> 16) + (SCREEN_HEIGHT << 7);
 }
 
 s32 vector_dot(Vector3D *a, Vector3D *b) {
