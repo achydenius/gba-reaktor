@@ -15,18 +15,18 @@ void swap(s32* a, s32* b) {
 
 void clear_screen(u32 color) {
   u32 value = (color << 24) | (color << 16) | (color << 8) | color;
-
-  for (u32 i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT / 4; i++) {
-    ((u32*)g_buffer)[i] = value;
+  u32* buffer = (u32*)g_buffer;
+  for (u32 i = (SCREEN_WIDTH * SCREEN_HEIGHT) >> 2; i > 0; i--) {
+    *buffer++ = value;
   }
 }
 
 void put_pixel(u32 x, u32 y, u32 color) {
-  u32 index = (y * SCREEN_WIDTH / 2) + (x / 2);
+  u32 index = ((y * SCREEN_WIDTH) >> 1) + (x >> 1);
   u32 pair = g_buffer[index];
 
   if (x & 1) {
-    g_buffer[index] = (pair & 0xFF) | (color << 8);
+    g_buffer[index] = (color << 8) | (pair & 0xFF);
   } else {
     g_buffer[index] = (pair & 0xFF00) | color;
   }
@@ -73,9 +73,29 @@ void draw_polygon(Polygon* polygon) {
     }
   }
 
+  u32 color = (polygon->color << 8) | polygon->color;
   for (u32 y = top_edge; y < bottom_edge; y++) {
-    for (u32 x = left_edges[y]; x < right_edges[y]; x++) {
-      put_pixel(x, y, polygon->color);
+    u32 x = left_edges[y];
+    u32 end_x = right_edges[y];
+
+    u16* buffer = &g_buffer[((y * SCREEN_WIDTH) >> 1) + (x >> 1)];
+
+    if (x & 1) {
+      *buffer++ = (polygon->color << 8) | (*buffer & 0xFF);
+      x++;
+    }
+
+    if (!(end_x & 1)) {
+      while (x < end_x - 1) {
+        *buffer++ = color;
+        x += 2;
+      }
+      *buffer = (*buffer & 0xFF00) | polygon->color;
+    } else {
+      while (x < end_x) {
+        *buffer++ = color;
+        x += 2;
+      }
     }
   }
 }

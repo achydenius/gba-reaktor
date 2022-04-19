@@ -29,8 +29,9 @@ int main() {
 
     u32 trig_table_wrap = TRIG_TABLE_SIZE - 1;
 
-    vector_set(&object.rotation, (angle >> 1) & trig_table_wrap, angle & trig_table_wrap, 0);
-    vector_set(&object.translation, sin_table[angle & trig_table_wrap] << 5, 0, -200 << 8);
+    vector_set(&object.rotation, (angle << 1) & trig_table_wrap, (angle << 3) & trig_table_wrap, 0);
+    vector_set(&object.translation, 0, 0, -220 << 8);
+
     object_render(&object);
 
     angle++;
