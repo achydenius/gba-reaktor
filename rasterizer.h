@@ -22,6 +22,10 @@ void clear_screen(u32 color) {
 }
 
 void put_pixel(u32 x, u32 y, u32 color) {
+  if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
+    return;
+  }
+
   u32 index = ((y * SCREEN_WIDTH) >> 1) + (x >> 1);
   u32 pair = g_buffer[index];
 
