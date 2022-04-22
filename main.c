@@ -1,8 +1,12 @@
+#include <gba.h>
 #include <gba_video.h>
+#include <maxmod.h>
 
 #include "math.h"
 #include "objects.h"
 #include "renderer.h"
+#include "soundbank.h"
+#include "soundbank_bin.h"
 
 typedef struct Star {
   u32 x, y;
@@ -49,12 +53,22 @@ void swap_buffers() {
   g_buffer = REG_DISPCNT & BACKBUFFER ? (u16*)MODE5_FB : (u16*)MODE5_BB;
 }
 
+void vblank_handler() { mmFrame(); }
+
 int main() {
   for (u32 i = 0; i < 256; i++) {
     BG_PALETTE[i] = palette[i];
   }
 
   REG_DISPCNT = MODE_4 | BG2_ON;
+
+  irqInit();
+  irqSet(IRQ_VBLANK, mmVBlank);
+  irqEnable(IRQ_VBLANK);
+  mmSetVBlankHandler(&vblank_handler);
+
+  mmInitDefault(soundbank_bin, 8);
+  mmStart(MOD_LOOP_DRONE, MM_PLAY_LOOP);
 
   u32 tick = 0;
   while (1) {

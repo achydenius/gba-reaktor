@@ -4,3 +4,5 @@
 *.sav
 tables.h
 objects.h
+soundbank.*
+soundbank_bin.*
