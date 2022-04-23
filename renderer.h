@@ -25,17 +25,11 @@ bool polygon_is_visible(Polygon *polygon) {
   return (a.x * b.y) - (a.y * b.x) > 0;
 }
 
-void object_render(Object *object) {
-  Matrix rotation, translation, model_to_world, inverse_rotation;
+void object_render(Object *object, s32 camera_distance) {
+  Matrix rotation, inverse_rotation;
 
-  // Create model to world space transformation matrix
   matrix_rotation(&rotation, object->rotation.x, object->rotation.y, object->rotation.z);
-  matrix_translation(&translation, object->translation.x, object->translation.y,
-                     object->translation.z);
-  matrix_multiply(&translation, &rotation, &model_to_world);
-
-  // Create inverse rotation matrix for lighting
-  matrix_transpose_rotation(&rotation, &inverse_rotation);
+  matrix_transpose(&rotation, &inverse_rotation);
 
   Vector3D light = {0, 0, 255 << 8};
   Vector3D light_transformed;
@@ -43,8 +37,8 @@ void object_render(Object *object) {
 
   for (u32 i = 0; i < object->vertex_count; i++) {
     Vertex *vertex = &object->vertices[i];
-    vector_multiply(&vertex->original, &model_to_world, &vertex->transformed);
-    vector_project(&vertex->transformed, 100 << 8, &vertex->projected);
+    vector_multiply(&vertex->original, &rotation, &vertex->transformed);
+    vector_project(&vertex->transformed, 100 << 8, camera_distance, &vertex->projected);
   }
 
   u32 visible_polygon_count = 0;
@@ -53,7 +47,7 @@ void object_render(Object *object) {
     if (polygon_is_visible(polygon)) {
       u32 z_sum = 0;
       for (u32 j = 0; j < polygon->vertex_count; j++) {
-        z_sum += polygon->vertices[j]->transformed.z;
+        z_sum += polygon->vertices[j]->transformed.z + camera_distance;
       }
       polygon->z = (z_sum << 8) / polygon->vertex_count;
       visible_polygons[visible_polygon_count++] = polygon;

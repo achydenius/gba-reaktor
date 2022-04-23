@@ -77,7 +77,6 @@ int main() {
     u32 trig_table_wrap = TRIG_TABLE_SIZE - 1;
 
     vector_set(&object.rotation, (tick << 1) & trig_table_wrap, (tick << 3) & trig_table_wrap, 0);
-    vector_set(&object.translation, 0, 0, -220 << 8);
 
     for (u32 i = 0; i < 3; i++) {
       for (u32 j = 0; j < 10; j++) {
@@ -85,7 +84,7 @@ int main() {
       }
     }
 
-    object_render(&object);
+    object_render(&object, -220 << 8);
 
     tick++;
 

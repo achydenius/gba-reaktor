@@ -12,9 +12,9 @@ typedef struct Vector3D {
 } Vector3D;
 
 typedef struct Matrix {
-  s32 m00, m01, m02, m03;
-  s32 m10, m11, m12, m13;
-  s32 m20, m21, m22, m23;
+  s32 m00, m01, m02;
+  s32 m10, m11, m12;
+  s32 m20, m21, m22;
 } Matrix;
 
 typedef struct Vertex {
@@ -35,7 +35,7 @@ typedef struct Object {
   Polygon *polygons;
   u32 vertex_count;
   u32 polygon_count;
-  Vector3D rotation, translation;
+  Vector3D rotation;
 } Object;
 
 #endif
